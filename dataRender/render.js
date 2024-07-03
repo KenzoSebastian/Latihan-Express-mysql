@@ -10,8 +10,8 @@ class RenderData {
     };
 };
 
-const dataHome = new RenderData("Home", "mx-4 active", "mx-4", "mx-4");
-const dataAbout = new RenderData("About", "mx-4", "mx-4 active", "mx-4");
-const dataUsers = new RenderData("Users", "mx-4", "mx-4", "mx-4 active");
+const renderHome = new RenderData("Home", "mx-4 fw-bold active", "mx-4", "mx-4");
+const renderAbout = new RenderData("About", "mx-4", "mx-4 fw-bold active", "mx-4");
+const renderUsers = new RenderData("Users", "mx-4", "mx-4", "mx-4 fw-bold active");
 
-module.exports = { dataHome, dataAbout, dataUsers };
+module.exports = { renderHome, renderAbout, renderUsers };
