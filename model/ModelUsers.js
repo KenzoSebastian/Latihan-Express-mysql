@@ -1,5 +1,14 @@
 const pool = require("../database/db");
 
-const modelUser = (query) => pool.execute(query);
+const getAllUsers = () => {
+    const query = "SELECT * FROM users";
+    return pool.execute(query);
+};
 
-module.exports = { modelUser };
+const getOneUser = (id) => {
+    const query = `SELECT * FROM users WHERE id = ${id}`;
+    return pool.execute(query);
+};
+
+
+module.exports = { getAllUsers, getOneUser };

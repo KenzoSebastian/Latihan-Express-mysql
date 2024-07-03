@@ -3,6 +3,7 @@ const { getUsers, addUser, createUser, detailUser } = require("../Controller/use
 
 const route = express.Router();
 
+
 route.get("/users", getUsers);
 
 // Halaman Tambah User

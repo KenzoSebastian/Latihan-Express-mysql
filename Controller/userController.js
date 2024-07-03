@@ -1,9 +1,13 @@
-const { modelUser } = require("../model/ModelUsers");
+const { getAllUsers, getOneUser } = require("../model/ModelUsers");
 const { renderUsers } = require("../dataRender/render");
 
 const getUsers = async (req, res) => {
-    const [ datas, field ] = await modelUser("SELECT * FROM users");
-    res.render("users/users",{datas, ...renderUsers});
+    try {
+        const [ datas, field ] = await getAllUsers();
+        res.render("users/users",{datas, ...renderUsers});
+    } catch (error) {
+        res.status(404).json(error);
+    };
 };
 
 const addUser = (req, res) => {
@@ -13,16 +17,23 @@ const addUser = (req, res) => {
 const createUser = async (req, res) => {
     console.log(req.body);
     const dataUser = req.body;
-    const [datas, field] = await modelUser(`INSERT INTO users VALUES
-                                        ("", "${dataUser.nama}", "${dataUser.email}", "${dataUser.nohp}", "${dataUser.jenis_kelamin}", "${dataUser.alamat}")`);
+    // const [datas, field] = await modelUser(`INSERT INTO users VALUES
+    //                                     ("", "${dataUser.nama}", "${dataUser.email}", "${dataUser.nohp}", "${dataUser.jenis_kelamin}", "${dataUser.alamat}")`);
     res.redirect("/users");
 
-    // tolong dibikin model nya terpisah ajaa biar ga terlalu penuh di controller
 }
 
 const detailUser = async (req, res) => {
-    const [datas, field] = await modelUser(`SELECT * FROM users WHERE id = ${req.params.id}`);
-    res.render("users/detailUser", { datas, ...renderUsers });
+    try {
+        const [datas, field] = await getOneUser(req.params.id);
+        res.render("users/detailUser", { datas, ...renderUsers });
+    } catch (error) {
+        res.cookie("error", error, { maxAge: 60000, httpOnly: true });
+        res.redirect("/error");
+    }
+
+
+
 };
 
 
