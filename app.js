@@ -10,6 +10,10 @@ const port = 4000;
 app.set("view engine", "ejs");
 app.use(ExpressLayouts);
 
+//parsing body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Halaman Home
 app.get("/", (req, res) => {
     res.render("home/home", renderHome);
