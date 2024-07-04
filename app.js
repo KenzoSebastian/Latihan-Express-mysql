@@ -1,5 +1,7 @@
 const express = require("express");
 const ExpressLayouts = require("express-ejs-layouts");
+const { body, validationResult, check } = require("express-validator");
+
 const { renderHome, renderAbout } = require("./dataRender/render");
 const userRouting = require("./route/RouteUsers");
 
@@ -10,8 +12,16 @@ const flash = require("connect-flash");
 const app = express();
 const port = 4000;
 
-// Setup Cookie
-app.use(cookieParser());
+// Setup flash
+app.use(cookieParser("secret"));
+app.use(session({
+    cookie: { maxAge: 6000 },
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true,
+}));
+app.use(flash());
+
 
 // Setup Ejs
 app.set("view engine", "ejs");
@@ -38,8 +48,15 @@ app.get("/about", (req, res) => {
 app.use("/", userRouting);
 
 app.get("/error", (req, res) => {
-    const pesanError = req.cookies.error.message;
+    const pesanError = req.flash("error");
+
+    if (pesanError.length === 0) res.redirect("/");
     res.status(404).render("users/errorUser", { pesanError, layout: "errorLayout" });
+});
+
+app.use("/", (req, res) => {
+    req.flash("error", "Halaman Tidak Ada");
+    res.redirect("/error");
 });
 
 

@@ -1,4 +1,4 @@
-const { getAllUsers, getOneUser } = require("../model/ModelUsers");
+const { getAllUsers, getOneUser, insertUser } = require("../model/ModelUsers");
 const { renderUsers } = require("../dataRender/render");
 
 const getUsers = async (req, res) => {
@@ -6,34 +6,44 @@ const getUsers = async (req, res) => {
         const [ datas, field ] = await getAllUsers();
         res.render("users/users",{datas, ...renderUsers});
     } catch (error) {
-        res.status(404).json(error);
+        req.flash("error", "Mysql Shutdown Unexpectedly");
+        res.redirect("/error");
     };
 };
+
 
 const addUser = (req, res) => {
     res.render("users/addUser", renderUsers);
 };
 
-const createUser = async (req, res) => {
-    console.log(req.body);
-    const dataUser = req.body;
-    // const [datas, field] = await modelUser(`INSERT INTO users VALUES
-    //                                     ("", "${dataUser.nama}", "${dataUser.email}", "${dataUser.nohp}", "${dataUser.jenis_kelamin}", "${dataUser.alamat}")`);
-    res.redirect("/users");
 
-}
+const createUser = async (req, res) => {
+    const dataUser = req.body;
+    console.log(dataUser);
+    try {
+        const [datas, field] = await insertUser(dataUser);
+        console.log(datas);
+        res.redirect("/users");
+
+    } catch (error) {
+        req.flash("error", error.message);
+        res.redirect("/error");
+    };
+};
+
 
 const detailUser = async (req, res) => {
     try {
-        const [datas, field] = await getOneUser(req.params.id);
+        const [datas, field] = await getOneUser("id", req.params.id);
+        if (datas.length === 0) {
+            req.flash("error", "No Data Available");
+            res.redirect("/error");
+        };
         res.render("users/detailUser", { datas, ...renderUsers });
     } catch (error) {
-        res.cookie("error", error, { maxAge: 60000, httpOnly: true });
+        req.flash("error", error.message);
         res.redirect("/error");
     }
-
-
-
 };
 
 
