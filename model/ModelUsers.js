@@ -6,7 +6,7 @@ const getAllUsers = () => {
 };
 
 const getOneUser = (key, value) => {
-    const query = `SELECT * FROM users WHERE ${key} = ${value}`;
+    const query = `SELECT * FROM users WHERE ${key} = "${value}"`;
     return pool.execute(query);
 };
 

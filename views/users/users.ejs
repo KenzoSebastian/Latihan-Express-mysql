@@ -4,6 +4,10 @@
     <a class="btn btn-success mb-4" href="/users/add">Tambah User</a>
 </div>
 
+<% if (pesan.length > 0 ) { %>
+<div class="alert alert-success" role="alert"><%= pesan %></div>
+<% } %>
+
 <table class="table table-info border border-dark">
     <thead>
         <tr>

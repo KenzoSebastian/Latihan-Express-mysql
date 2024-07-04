@@ -1,10 +1,12 @@
 const { getAllUsers, getOneUser, insertUser } = require("../model/ModelUsers");
 const { renderUsers } = require("../dataRender/render");
+const { validationResult } = require("express-validator");
 
 const getUsers = async (req, res) => {
     try {
-        const [ datas, field ] = await getAllUsers();
-        res.render("users/users",{datas, ...renderUsers});
+        const [datas, field] = await getAllUsers();
+        const pesan = req.flash("pesan");
+        res.render("users/users",{datas, ...renderUsers, pesan});
     } catch (error) {
         req.flash("error", "Mysql Shutdown Unexpectedly");
         res.redirect("/error");
@@ -19,12 +21,15 @@ const addUser = (req, res) => {
 
 const createUser = async (req, res) => {
     const dataUser = req.body;
-    console.log(dataUser);
+    const notValid = validationResult(req);
     try {
-        const [datas, field] = await insertUser(dataUser);
-        console.log(datas);
-        res.redirect("/users");
-
+        if (!notValid.isEmpty()) {
+            res.render("users/addUser", {notValid: notValid.array(), ...renderUsers});
+        } else {
+            const [datas, field] = await insertUser(dataUser);
+            req.flash("pesan", "Data User Berhasil ditambahkan");
+            res.redirect("/users");
+        };
     } catch (error) {
         req.flash("error", error.message);
         res.redirect("/error");

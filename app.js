@@ -1,6 +1,5 @@
 const express = require("express");
 const ExpressLayouts = require("express-ejs-layouts");
-const { body, validationResult, check } = require("express-validator");
 
 const { renderHome, renderAbout } = require("./dataRender/render");
 const userRouting = require("./route/RouteUsers");
@@ -46,6 +45,7 @@ app.get("/about", (req, res) => {
 
 // Halaman Users
 app.use("/", userRouting);
+
 
 app.get("/error", (req, res) => {
     const pesanError = req.flash("error");
