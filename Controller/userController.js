@@ -1,4 +1,4 @@
-const { getAllUsers, getOneUser, insertUser, setUser } = require("../model/ModelUsers");
+const { getAllUsers, getOneUser, insertUser, setUser, removeUser } = require("../model/ModelUsers");
 const { renderUsers } = require("../dataRender/render");
 const { validationResult } = require("express-validator");
 
@@ -53,7 +53,7 @@ const detailUser = async (req, res) => {
 
 
 const editUser = async (req, res) => {
-    const [datas, field] = await getOneUser("id", req.params.id);
+    const [ datas, field ] = await getOneUser("id", req.params.id);
     const notValid = req.flash("notValid");
     res.render("users/editUser", { datas, ...renderUsers, notValid });
 };
@@ -78,10 +78,17 @@ const updateUser = async (req, res) => {
     };
 };
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
     const id = req.params.id;
-    console.log(id);
+    try {
+        await removeUser(id);
+        req.flash("pesan", "Dats User Berhasil dihapus");
+        res.redirect("/users");
+    } catch (error) {
+        req.flash("error", error.message);
+        res.redirect("/error");
+    };
 };
 
 
-module.exports = { getUsers, addUser, createUser, detailUser, editUser, updateUser };
+module.exports = { getUsers, addUser, createUser, detailUser, editUser, updateUser, deleteUser };

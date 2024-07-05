@@ -27,4 +27,10 @@ const setUser = (body) => {
     return pool.execute(query);
 };
 
-module.exports = { getAllUsers, getOneUser, insertUser, setUser };
+const removeUser = (id) => {
+    const query = `DELETE FROM users WHERE id = ${id}`;
+
+    return pool.execute(query);
+};
+
+module.exports = { getAllUsers, getOneUser, insertUser, setUser, removeUser };

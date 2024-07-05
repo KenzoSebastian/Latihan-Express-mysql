@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUsers, addUser, createUser, detailUser, editUser, updateUser } = require("../Controller/userController");
+const { getUsers, addUser, createUser, detailUser, editUser, updateUser, deleteUser } = require("../Controller/userController");
 
 const { validationArr, validationUpdate } = require("../validator/userValidator");
 
@@ -19,12 +19,14 @@ route.post("/users", validationArr, createUser);
 route.get("/users/detail/:id", detailUser);
 
 
-//Halaman Update user
+// Halaman Update user
 route.get("/users/edit/:id", editUser);
+// Proses update users
 route.patch("/users/:id", validationUpdate, updateUser);
 
 
 //Halaman Delete
+route.delete("/users/delete/:id", deleteUser);
 
 
 module.exports = route;
