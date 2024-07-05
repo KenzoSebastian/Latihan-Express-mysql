@@ -8,8 +8,12 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 
+const methodOverride = require("method-override");
+
 const app = express();
 const port = 4000;
+
+app.use(methodOverride("_method"));
 
 // Setup flash
 app.use(cookieParser("secret"));

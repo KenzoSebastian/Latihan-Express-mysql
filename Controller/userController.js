@@ -1,4 +1,4 @@
-const { getAllUsers, getOneUser, insertUser } = require("../model/ModelUsers");
+const { getAllUsers, getOneUser, insertUser, setUser } = require("../model/ModelUsers");
 const { renderUsers } = require("../dataRender/render");
 const { validationResult } = require("express-validator");
 
@@ -48,8 +48,40 @@ const detailUser = async (req, res) => {
     } catch (error) {
         req.flash("error", error.message);
         res.redirect("/error");
-    }
+    };
 };
 
 
-module.exports = { getUsers, addUser, createUser, detailUser };
+const editUser = async (req, res) => {
+    const [datas, field] = await getOneUser("id", req.params.id);
+    const notValid = req.flash("notValid");
+    res.render("users/editUser", { datas, ...renderUsers, notValid });
+};
+
+
+const updateUser = async (req, res) => {
+    const datas = req.body;
+    const id = req.params.id;
+    const notValid = validationResult(req);
+    try {
+        if (!notValid.isEmpty()) {
+            req.flash("notValid", notValid.array());
+            res.redirect(`/users/edit/${id}`);
+        } else {
+            await setUser({ id, ...datas });
+            req.flash("pesan", "Data User Berhasil diupdate");
+            res.redirect("/users");
+        };
+    } catch (error) {
+        req.flash("error", error.message);
+        res.redirect("/error");
+    };
+};
+
+const deleteUser = (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+};
+
+
+module.exports = { getUsers, addUser, createUser, detailUser, editUser, updateUser };

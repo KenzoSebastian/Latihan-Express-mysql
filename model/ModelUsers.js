@@ -18,4 +18,13 @@ const insertUser = (body) => {
     return pool.execute(query);
 };
 
-module.exports = { getAllUsers, getOneUser, insertUser };
+const setUser = (body) => {
+    const query = `UPDATE users SET 
+                    nama = "${body.nama}", email = "${body.email}", nohp = "${body.nohp}",
+                    jenis_kelamin = "${body.jenis_kelamin}", alamat = "${body.alamat}" 
+                    WHERE id = ${body.id}`;
+
+    return pool.execute(query);
+};
+
+module.exports = { getAllUsers, getOneUser, insertUser, setUser };
