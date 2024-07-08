@@ -1,8 +1,11 @@
 const express = require("express");
 const ExpressLayouts = require("express-ejs-layouts");
 
+require("dotenv").config();
+
 const { renderHome, renderAbout } = require("./dataRender/render");
 const userRouting = require("./route/RouteUsers");
+
 
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -11,7 +14,7 @@ const flash = require("connect-flash");
 const methodOverride = require("method-override");
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 5000;
 
 app.use(methodOverride("_method"));
 
